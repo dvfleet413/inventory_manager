@@ -1,0 +1,3 @@
+views: "app/views"
+sessions: true
+session_secret: "password_security"
