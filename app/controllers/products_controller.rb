@@ -3,7 +3,6 @@ require "./app/models/product"
 require 'pry'
 
 class ProductsController < Sinatra::Base
-
   configure do
     set :views, "app/views"
     enable :sessions
@@ -24,7 +23,6 @@ class ProductsController < Sinatra::Base
     redirect "/products/#{@product.id}"
   end
 
-
   #Read
   get '/products' do
     @products = Product.all.select{|product| product.user_id == session[:user_id]}
@@ -41,7 +39,6 @@ class ProductsController < Sinatra::Base
     erb :'products/show'
   end
 
-
   #Update
   get '/products/:id/edit' do
     @product = Product.find(params[:id])
@@ -57,7 +54,6 @@ class ProductsController < Sinatra::Base
     redirect "/products/#{@product.id}"
   end
 
-
   #Delete
   delete '/products/:id' do
     @product = Product.find(params[:id])
@@ -65,9 +61,14 @@ class ProductsController < Sinatra::Base
     redirect '/products'
   end
 
+  helpers do
+    def logged_in?
+      !!session[:user_id]
+    end
 
-
-
-
+    def current_user
+      User.find(session[:user_id])
+    end
+  end
 
 end
