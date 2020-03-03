@@ -55,7 +55,6 @@ class UsersController < Sinatra::Base
     else
       @user = User.find(session[:user_id])
     end
-    binding.pry
     erb :'sessions/account'
   end
 
