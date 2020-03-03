@@ -1,3 +1,13 @@
 <h1>Welcome <%=@user.username%>!</h1>
 
+<p>You are
+  <% if admin? %>
+    the admin
+  <% else %>
+    an employee
+  <% end %>
+of <%=@user.company.name%>.</p>
+
+<a href='/products'>View Inventory</a>
+</br>
 <a href='/logout'>Log Out</a>

@@ -25,6 +25,7 @@ class ProductsController < Sinatra::Base
 
   #Read
   get '/products' do
+    @user = current_user
     @products = Product.all.select{|product| product.company_id == session[:company_id]}
     sql = <<-SQL
       SELECT SUM(products.price * products.quantity) FROM products
