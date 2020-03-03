@@ -37,10 +37,12 @@ class UsersController < Sinatra::Base
     user = User.find_by(username: params[:username])
     if admin && admin.authenticate(params[:password])
       session[:user_id] = admin.id
+      session[:company_id] = admin.company_id
       session[:role] = "admin"
       redirect '/account'
     elsif user && user.authenticate(params[:password])
       session[:user_id] = user.id
+      session[:company_id] = user.company_id
       redirect '/account'
     else
       redirect '/failure'

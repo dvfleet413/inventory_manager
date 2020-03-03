@@ -19,16 +19,16 @@ class ProductsController < Sinatra::Base
     @product = Product.create({name: params[:name],
                                price: params[:price].to_f,
                                quantity: params[:quantity],
-                               user_id: session[:user_id]})
+                               company_id: session[:company_id]})
     redirect "/products/#{@product.id}"
   end
 
   #Read
   get '/products' do
-    @products = Product.all.select{|product| product.user_id == session[:user_id]}
+    @products = Product.all.select{|product| product.company_id == session[:company_id]}
     sql = <<-SQL
       SELECT SUM(products.price * products.quantity) FROM products
-      WHERE products.user_id = #{session[:user_id]}
+      WHERE products.company_id = #{session[:company_id]}
     SQL
     @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
     erb :'products/index'
@@ -68,6 +68,10 @@ class ProductsController < Sinatra::Base
 
     def current_user
       User.find(session[:user_id])
+    end
+
+    def admin?
+      session[:role] == "admin"
     end
   end
 
