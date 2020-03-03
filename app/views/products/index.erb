@@ -15,12 +15,12 @@
       <td>$<%= "%.2f" % product.price%></td>
       <td><%=product.quantity%></td>
       <td>$<%= "%.2f" % (product.price * product.quantity) %></td>
-      <td><a href="/products/<%= product.id %>" class="btn btn-primary">View Product</a></td>
-      <td><a href="/products/<%= product.id %>/edit" class="btn btn-warning">Edit Product</a></td>
+      <td><a href="/products/<%= product.id %>" class="btn btn-primary">View</a></td>
+      <td><a href="/products/<%= product.id %>/edit" class="btn btn-warning">Edit</a></td>
       <td>
         <form method='POST' action="/products/<%=product.id%>">
           <input type='hidden' name='_method' value='DELETE'>
-          <input type='submit' class="btn btn-danger" value='Delete Product'>
+          <input type='submit' class="btn btn-danger" value='Delete'>
         </form>
       </td>
   <% end %>
