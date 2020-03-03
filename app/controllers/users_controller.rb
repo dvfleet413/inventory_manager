@@ -33,9 +33,14 @@ class UsersController < Sinatra::Base
   end
 
   post '/login' do
-    @user = User.find_by(username: params[:username])
-    if @user && @user.authenticate(params[:password])
-      session[:user_id] = @user.id
+    admin = Admin.find_by(username: params[:username])
+    user = User.find_by(username: params[:username])
+    if admin && admin.authenticate(params[:password])
+      session[:user_id] = admin.id
+      session[:role] = "admin"
+      redirect '/account'
+    elsif user && user.authenticate(params[:password])
+      session[:user_id] = user.id
       redirect '/account'
     else
       redirect '/failure'
@@ -43,7 +48,12 @@ class UsersController < Sinatra::Base
   end
 
   get '/account' do
-    @user = User.find(session[:user_id])
+    if admin?
+      @user = Admin.find(session[:user_id])
+    else
+      @user = User.find(session[:user_id])
+    end
+    binding.pry
     erb :'sessions/account'
   end
 
@@ -63,6 +73,10 @@ class UsersController < Sinatra::Base
 
     def current_user
       User.find(session[:user_id])
+    end
+
+    def admin?
+      session[:role] == "admin"
     end
   end
 
