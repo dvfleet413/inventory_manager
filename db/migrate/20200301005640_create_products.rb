@@ -5,6 +5,7 @@ class CreateProducts < ActiveRecord::Migration[5.2]
       t.decimal :price
       t.integer :quantity
       t.integer :user_id
+      t.integer :company_id
     end
   end
 end
