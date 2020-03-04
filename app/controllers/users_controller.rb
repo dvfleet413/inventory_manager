@@ -1,11 +1,5 @@
 class UsersController < ApplicationController
 
-#  configure do
-#    set :views, "app/views"
-#    enable :sessions
-#    set :session_secret, "password_security"
-#  end
-
   get '/' do
     erb :index
   end
@@ -75,19 +69,5 @@ class UsersController < ApplicationController
     session.clear
     redirect '/'
   end
-
-#  helpers do
-#    def logged_in?
-#      !!session[:user_id]
-#    end
-#
-#    def current_user
-#      User.find(session[:user_id])
-#    end
-#
-#    def admin?
-#      session[:role] == "admin"
-#    end
-#  end
 
 end

@@ -1,9 +1,4 @@
 class ProductsController < ApplicationController
-#  configure do
-#    set :views, "app/views"
-#    enable :sessions
-#    set :session_secret, "password_security"
-#  end
 
   #Create
   get '/products/new' do
@@ -57,19 +52,5 @@ class ProductsController < ApplicationController
     @product.destroy
     redirect '/products'
   end
-
-#  helpers do
-#    def logged_in?
-#      !!session[:user_id]
-#    end
-#
-#    def current_user
-#      User.find(session[:user_id])
-#    end
-#
-#    def admin?
-#      session[:role] == "admin"
-#    end
-#  end
 
 end
