@@ -1,12 +1,10 @@
-require 'pry'
+class UsersController < ApplicationController
 
-class UsersController < Sinatra::Base
-
-  configure do
-    set :views, "app/views"
-    enable :sessions
-    set :session_secret, "password_security"
-  end
+#  configure do
+#    set :views, "app/views"
+#    enable :sessions
+#    set :session_secret, "password_security"
+#  end
 
   get '/' do
     erb :index
@@ -18,7 +16,6 @@ class UsersController < Sinatra::Base
   end
 
   post '/signup' do
-    binding.pry
     if Company.all.collect{|company| company.id}.include?(params[:user][:company_id].to_i)
       user = User.new({
         username: params[:user][:username],
@@ -79,18 +76,18 @@ class UsersController < Sinatra::Base
     redirect '/'
   end
 
-  helpers do
-    def logged_in?
-      !!session[:user_id]
-    end
-
-    def current_user
-      User.find(session[:user_id])
-    end
-
-    def admin?
-      session[:role] == "admin"
-    end
-  end
+#  helpers do
+#    def logged_in?
+#      !!session[:user_id]
+#    end
+#
+#    def current_user
+#      User.find(session[:user_id])
+#    end
+#
+#    def admin?
+#      session[:role] == "admin"
+#    end
+#  end
 
 end

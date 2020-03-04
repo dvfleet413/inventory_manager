@@ -30,4 +30,6 @@
 <% if @total %>
   <h4>Total Inventory Value: $<%= "%.2f" % @total %></h4>
 <% end %>
-<a href='/products/new' class="btn btn-success">Add New Product</a>
+<% if admin? %>
+  <a href='/products/new' class="btn btn-success">Add New Product</a>
+<% end %>

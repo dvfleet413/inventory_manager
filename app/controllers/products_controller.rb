@@ -1,13 +1,9 @@
-require "./config/environment"
-require "./app/models/product"
-require 'pry'
-
-class ProductsController < Sinatra::Base
-  configure do
-    set :views, "app/views"
-    enable :sessions
-    set :session_secret, "password_security"
-  end
+class ProductsController < ApplicationController
+#  configure do
+#    set :views, "app/views"
+#    enable :sessions
+#    set :session_secret, "password_security"
+#  end
 
   #Create
   get '/products/new' do
@@ -62,18 +58,18 @@ class ProductsController < Sinatra::Base
     redirect '/products'
   end
 
-  helpers do
-    def logged_in?
-      !!session[:user_id]
-    end
-
-    def current_user
-      User.find(session[:user_id])
-    end
-
-    def admin?
-      session[:role] == "admin"
-    end
-  end
+#  helpers do
+#    def logged_in?
+#      !!session[:user_id]
+#    end
+#
+#    def current_user
+#      User.find(session[:user_id])
+#    end
+#
+#    def admin?
+#      session[:role] == "admin"
+#    end
+#  end
 
 end
