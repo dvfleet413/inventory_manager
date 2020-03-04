@@ -5,27 +5,35 @@ class UsersController < ApplicationController
   end
 
   get '/signup' do
-    @companies = Company.all
     erb :'registrations/signup'
   end
 
   post '/signup' do
-    if Company.all.collect{|company| company.id}.include?(params[:user][:company_id].to_i)
-      user = User.new({
-        username: params[:user][:username],
-        email: params[:user][:email],
-        password: params[:user][:password],
-        company_id: params[:user][:company_id]})
-    else
-      company = Company.create(name: params[:company][:name])
-      user = Admin.new({
-        username: params[:user][:username],
-        email: params[:user][:email],
-        password: params[:user][:password],
-        company_id: company.id})
-    end
+    company = Company.create(name: params[:company][:name])
+    user = Admin.new({
+      username: params[:user][:username],
+      email: params[:user][:email],
+      password: params[:user][:password],
+      company_id: company.id})
     if user.save
       redirect '/login'
+    else
+      redirect '/failure'
+    end
+  end
+
+  get '/add_employee' do
+    erb :'registrations/add_employee'
+  end
+
+  post '/add_employee' do
+    user = User.new({
+      username: params[:user][:username],
+      email: params[:user][:email],
+      password: params[:user][:password],
+      company_id: current_user.company.id})
+    if user.save
+      redirect '/account'
     else
       redirect '/failure'
     end

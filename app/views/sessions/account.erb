@@ -9,5 +9,9 @@
 of <%=@user.company.name%>.</p>
 
 <a href='/products'>View Inventory</a>
-</br>
+<br>
+<% if admin? %>
+  <a href='/add_employee'>Add Employee</a>
+  <br>
+<% end %>
 <a href='/logout'>Log Out</a>

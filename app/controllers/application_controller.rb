@@ -14,12 +14,12 @@ class ApplicationController < Sinatra::Base
       !!session[:user_id]
     end
 
-    def current_user
-      User.find(session[:user_id])
-    end
-
     def admin?
       session[:role] == "admin"
+    end
+
+    def current_user
+      admin? ? Admin.find(session[:user_id]) : User.find(session[:user_id])
     end
   end
 
