@@ -9,16 +9,24 @@ class UsersController < ApplicationController
   end
 
   post '/signup' do
-    company = Company.create(name: params[:company][:name])
-    user = Admin.new({
-      username: params[:user][:username],
-      email: params[:user][:email],
-      password: params[:user][:password],
-      company_id: company.id})
-    if user.save
-      redirect '/login'
-    else
+    if Admin.all.collect{|admin| admin.username}.include?(params[:user][:username])
       redirect '/failure'
+    elsif Company.all.collect{|company| company.name}.include?(params[:company][:name])
+      redirect '/failure'
+    elsif params[:user][:password] != params[:user][:password_confirm]
+      redirect '/failure'
+    else
+      company = Company.create(name: params[:company][:name])
+      user = Admin.new({
+        username: params[:user][:username],
+        email: params[:user][:email],
+        password: params[:user][:password],
+        company_id: company.id})
+      if user.save
+        redirect '/login'
+      else
+        redirect '/failure'
+      end
     end
   end
 
@@ -27,15 +35,19 @@ class UsersController < ApplicationController
   end
 
   post '/add_employee' do
-    user = User.new({
-      username: params[:user][:username],
-      email: params[:user][:email],
-      password: params[:user][:password],
-      company_id: current_user.company.id})
-    if user.save
-      redirect '/account'
-    else
+    if User.all.collect{|user| user.username}.include?(params[:user][:username])
       redirect '/failure'
+    else
+      user = User.new({
+        username: params[:user][:username],
+        email: params[:user][:email],
+        password: params[:user][:password],
+        company_id: current_user.company.id})
+      if user.save
+        redirect '/account'
+      else
+        redirect '/failure'
+      end
     end
   end
 
