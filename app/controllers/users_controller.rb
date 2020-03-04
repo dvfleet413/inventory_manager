@@ -39,6 +39,17 @@ class UsersController < ApplicationController
     end
   end
 
+  get '/employees' do
+    @users = User.select{|user| user.company == current_user.company}
+    erb :'users/employees'
+  end
+
+  delete '/employees/:id' do
+    @user = User.find(params[:id])
+    @user.destroy
+    redirect '/employees'
+  end
+
   get '/login' do
     erb :'sessions/login'
   end

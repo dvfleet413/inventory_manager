@@ -18,5 +18,8 @@
     <% end %>
   </p>
   <p>Product Quanitity: <input type='number' name='quantity' value="<%=@product.quantity%>"></p>
-  <input type='submit' value='Update Product'>
+  <div class='row'>
+    <div class='col-md-4'><input type='submit' class="btn btn-warning" value='Update Product'></div>
+    <div class='col-md-4'><a href='/products' class="btn btn-primary">Back to Inventory</a></div>
+  </div>
 </form>

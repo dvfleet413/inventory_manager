@@ -1,0 +1,13 @@
+<h1>Your Company's Employees</h1>
+
+<% @users.each_with_index do |user, index| %>
+  <h3>Employee <%= index +1 %>:</h3>
+  <p>Username: <%= user.username %></p>
+  <p>Email: <%= user.email %></p>
+  <form method='POST' action="/employees/<%=user.id%>">
+    <input type='hidden' name='_method' value='DELETE'>
+    <input type='submit' class="btn btn-danger" value='Delete Account'>
+  </form>
+  <br>
+  <br>
+<% end %>

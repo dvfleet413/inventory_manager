@@ -1,11 +1,11 @@
-<h1>Welcome to the Inventory-Inator!</h1>
-<img src='https://media.giphy.com/media/11PEptfDmR4vjW/giphy.gif' style="width: 25%; float: left; margin: 1em;">
+<h1>Welcome to the Inventory Manager</h1>
 <p>Do you struggle to keep up with your inventory? Do you find that you fail to order the supplies you need
-  becuase you don't remember what you have in stock? Then the Inventory-Inator is for you! With the power of the
-  Inventory-Inator, you will never order too much or too little, and you will take over the tri-state area!</p>
+  becuase you don't remember what you have in stock? Then the Inventory Manager is for you! With the power of the
+  Inventory Manager, you will never order too much or too little, which will save you time and money!</p>
 
 <% if logged_in? %>
-  <p><a href='/products'>View Inventory</a>.</p>
+  <p><a href='/products'>View Inventory</a></p>
+  <p><a href='/account'>View Account</a></p>
 <% else %>
   <p><a href='/login'>Login</a> or <a href='/signup'>Sign Up</a> to get started.</p>
 <% end %>

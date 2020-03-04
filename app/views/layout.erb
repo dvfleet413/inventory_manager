@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Inventory-Inator</title>
+    <title>Inventory Manager</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet"  href="/stylesheets/style.css">
   </head>
@@ -9,9 +9,9 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <% if logged_in? %>
-        <a class="navbar-brand" href="/products">Inventory-Inator</a>
+        <a class="navbar-brand" href="/products">Inventory Manager</a>
       <% else %>
-        <a class="navbar-brand" href="/login">Inventory-Inator</a>
+        <a class="navbar-brand" href="/login">Inventory Manager</a>
       <% end %>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -24,6 +24,9 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <% if logged_in? %>
+            <li class="nav-item">
+              <a class="nav-link" href="/account">Account</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Log Out</a>
             </li>
