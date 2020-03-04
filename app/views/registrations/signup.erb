@@ -1,8 +1,23 @@
 <h1>Create a New Account</h1>
 
-<form method='POST' action='/signup'
-  <p>Username: <input type='text' name='username'></p>
-  <p>Email: <input type='text' name='email'></p>
-  <p>Password: <input type='password' name='password'></p>
+
+<form method='POST' action='/signup'>
+  <h3>Your Information</h3>
+  <p>Username: <input type='text' name='user[username]'></p>
+  <p>Email: <input type='text' name='user[email]'></p>
+  <p>Password: <input type='password' name='user[password]'></p>
+  <br>
+  <h3>Company Information</h3>
+  <h4>Join existing company as employee...</h4>
+  <% @companies.each_with_index do |company, index| %>
+    <input type="radio" id="company-<%= company.id %>" name="user[company_id]" value="<%= company.id %>"
+    <label for="company-<%= company.id %>"><%= company.name %></label>
+    <br>
+  <% end %>
+  <br>
+  <h4>...Or create new company as admin</h4>
+  <p>Company Name: <input type="text" name="company[name]"></p>
+  <br>
   <input type='submit' value='Create Account'>
+
 </form>

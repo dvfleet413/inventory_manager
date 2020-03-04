@@ -1,4 +1,4 @@
-<h1>Total Inventory - <%= @user.company.name %></h1>
+<h1>Total Inventory - <%= @company.name %></h1>
 <table class='table'>
   <tr>
     <th>Product</th>
@@ -27,5 +27,7 @@
       <% end %>
   <% end %>
 </table>
-<h4>Total Inventory Value: $<%= "%.2f" % @total %></h4>
+<% if @total %>
+  <h4>Total Inventory Value: $<%= "%.2f" % @total %></h4>
+<% end %>
 <a href='/products/new' class="btn btn-success">Add New Product</a>

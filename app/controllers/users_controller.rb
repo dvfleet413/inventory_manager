@@ -13,14 +13,26 @@ class UsersController < Sinatra::Base
   end
 
   get '/signup' do
+    @companies = Company.all
     erb :'registrations/signup'
   end
 
   post '/signup' do
-    user = User.new({
-      username: params[:username],
-      email: params[:email],
-      password: params[:password]})
+    binding.pry
+    if Company.all.collect{|company| company.id}.include?(params[:user][:company_id].to_i)
+      user = User.new({
+        username: params[:user][:username],
+        email: params[:user][:email],
+        password: params[:user][:password],
+        company_id: params[:user][:company_id]})
+    else
+      company = Company.create(name: params[:company][:name])
+      user = Admin.new({
+        username: params[:user][:username],
+        email: params[:user][:email],
+        password: params[:user][:password],
+        company_id: company.id})
+    end
     if user.save
       redirect '/login'
     else
