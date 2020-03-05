@@ -1,9 +1,5 @@
 class UsersController < ApplicationController
 
-  get '/' do
-    erb :index
-  end
-
   get '/signup' do
     erb :'registrations/signup'
   end
@@ -69,15 +65,34 @@ class UsersController < ApplicationController
   post '/login' do
     admin = Admin.find_by(username: params[:username])
     user = User.find_by(username: params[:username])
-    if admin && admin.authenticate(params[:password])
-      session[:user_id] = admin.id
-      session[:company_id] = admin.company_id
-      session[:role] = "admin"
-      redirect '/account'
-    elsif user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      session[:company_id] = user.company_id
-      redirect '/account'
+    #Username matches an Admin account
+    if admin
+      if admin.authenticate(params[:password])
+        session[:user_id] = admin.id
+        session[:company_id] = admin.company_id
+        session[:role] = "admin"
+        flash[:alert_success] = "You have successfully logged in."
+        redirect '/account'
+      else
+        flash[:alert_danger] = "Incorrect password, please try again."
+        redirect '/login'
+      end
+    #Username matches a User account
+    elsif user
+      if user.authenticate(params[:password])
+        session[:user_id] = user.id
+        session[:company_id] = user.company_id
+        flash[:alert_success] = "You have successfully logged in."
+        redirect '/account'
+      else
+        flash[:alert_danger] = "Incorrect password, please try again."
+        redirect '/login'
+      end
+    #Username doesn't match any account
+    elsif !admin && !user
+      flash[:alert_warning] = "Unable to find your account.  Please make sure you typed your username correctly."
+      redirect '/login'
+
     else
       redirect '/failure'
     end
@@ -98,6 +113,7 @@ class UsersController < ApplicationController
 
   get '/logout' do
     session.clear
+    flash[:alert_success] = "You have successfully logged out."
     redirect '/'
   end
 

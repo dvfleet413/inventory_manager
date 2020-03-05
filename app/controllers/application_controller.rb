@@ -5,10 +5,12 @@ class ApplicationController < Sinatra::Base
     enable :sessions
     set :session_secret, "password_security"
     enable :static
-    set :public_folder, 'public' 
+    set :public_folder, 'public'
+    register Sinatra::Flash
   end
 
   get '/' do
+    erb :index
   end
 
   helpers do

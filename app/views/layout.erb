@@ -42,6 +42,15 @@
         </ul>
       </div>
     </nav>
+    <% flash.keys.each do |alert| %>
+      <div class="alert <%= alert.to_s.gsub('_', '-') %> alert-dismissible fade show" role="alert">
+        <%= flash[alert] %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% end %>
+
 
     <div class='container'>
       <%= yield %>
