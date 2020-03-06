@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class EmployeesController < ApplicationController
 
   get '/signup' do
     erb :'registrations/signup'
@@ -39,14 +39,14 @@ class UsersController < ApplicationController
   end
 
   post '/add_employee' do
-    if User.all.collect{|user| user.username}.include?(params[:user][:username])
+    if Employee.all.collect{|employee| employee.username}.include?(params[:user][:username])
       flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
       redirect '/add_employee'
     elsif params[:user][:password] != params[:user][:password_confirm]
       flash[:alert_danger] = "Passwords did not match, please try again."
       redirect '/add_employee'
     else
-      user = User.new({
+      user = Employee.new({
         username: params[:user][:username],
         email: params[:user][:email],
         password: params[:user][:password],
@@ -60,12 +60,12 @@ class UsersController < ApplicationController
   end
 
   get '/employees' do
-    @users = User.select{|user| user.company == current_user.company}
+    @users = Employee.select{|user| user.company == current_user.company}
     erb :'users/employees'
   end
 
   delete '/employees/:id' do
-    @user = User.find(params[:id])
+    @user = Employee.find(params[:id])
     @user.destroy
     redirect '/employees'
   end
@@ -76,13 +76,12 @@ class UsersController < ApplicationController
 
   post '/login' do
     admin = Admin.find_by(username: params[:username])
-    user = User.find_by(username: params[:username])
+    employee = Employee.find_by(username: params[:username])
     #Username matches an Admin account
     if admin
       if admin.authenticate(params[:password])
         session[:user_id] = admin.id
         session[:company_id] = admin.company_id
-        session[:role] = "admin"
         flash[:alert_success] = "You have successfully logged in."
         redirect '/account'
       else
@@ -90,8 +89,8 @@ class UsersController < ApplicationController
         redirect '/login'
       end
     #Username matches a User account
-    elsif user
-      if user.authenticate(params[:password])
+  elsif employee
+      if employee.authenticate(params[:password])
         session[:user_id] = user.id
         session[:company_id] = user.company_id
         flash[:alert_success] = "You have successfully logged in."
@@ -101,7 +100,7 @@ class UsersController < ApplicationController
         redirect '/login'
       end
     #Username doesn't match any account
-    elsif !admin && !user
+  elsif !admin && !employee
       flash[:alert_warning] = "Unable to find your account.  Please make sure you typed your username correctly."
       redirect '/login'
     else
@@ -113,7 +112,7 @@ class UsersController < ApplicationController
     if current_user.admin?
       @user = Admin.find(session[:user_id])
     else
-      @user = User.find(session[:user_id])
+      @user = Employee.find(session[:user_id])
     end
     erb :'sessions/account'
   end

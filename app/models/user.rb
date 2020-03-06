@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class Employee < ActiveRecord::Base
   validates_presence_of :username, :email
   has_secure_password
   belongs_to :company

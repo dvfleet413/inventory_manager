@@ -1,10 +1,8 @@
-require 'sinatra/base'
-require 'sinatra/flash'
 require "./config/environment"
 require_all './app'
 
 use Rack::MethodOverride
 
-use UsersController
+use EmployeesController
 use ProductsController
 run ApplicationController

@@ -3,7 +3,7 @@ class ApplicationController < Sinatra::Base
   configure do
     set :views, "app/views"
     enable :sessions
-    set :session_secret, "password_security"
+    set :session_secret, ENV['SESSION_SECRET']{ SecureRandom.hex(64) }
     enable :static
     set :public_folder, 'public'
     register Sinatra::Flash
@@ -22,7 +22,7 @@ class ApplicationController < Sinatra::Base
       if Admin.find(session[:user_id])
         return Admin.find(session[:user_id])
       else
-        User.find(session[:user_id])
+        Employee.find(session[:user_id])
       end
     end
   end
