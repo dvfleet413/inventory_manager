@@ -3,7 +3,7 @@ class ApplicationController < Sinatra::Base
   configure do
     set :views, "app/views"
     enable :sessions
-    set :session_secret, ENV['SESSION_SECRET']{ SecureRandom.hex(64) }
+    set :session_secret, ENV['SESSION_SECRET']
     enable :static
     set :public_folder, 'public'
     register Sinatra::Flash
