@@ -4,4 +4,9 @@ class User < ActiveRecord::Base
   belongs_to :company
   has_many :producs, :through => :company
   has_one :admin, :through => :company
+
+  def admin?
+    false
+  end
+
 end

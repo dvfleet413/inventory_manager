@@ -4,4 +4,8 @@ class Admin < ActiveRecord::Base
   belongs_to :company
   has_many :producs, :through => :company
   has_many :users, :through => :company
+
+  def admin?
+    true
+  end
 end

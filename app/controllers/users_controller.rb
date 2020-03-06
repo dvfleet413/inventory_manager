@@ -5,12 +5,19 @@ class UsersController < ApplicationController
   end
 
   post '/signup' do
+    #Make sure username is unique
     if Admin.all.collect{|admin| admin.username}.include?(params[:user][:username])
-      redirect '/failure'
+      flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
+      redirect '/signup'
+    #Make sure company is unique
     elsif Company.all.collect{|company| company.name}.include?(params[:company][:name])
-      redirect '/failure'
+      flash[:alert_danger] = "The company #{params[:company][:name]} has already been registered."
+      redirect '/signup'
+    #Make sure password and password_confirm match
     elsif params[:user][:password] != params[:user][:password_confirm]
-      redirect '/failure'
+      flash[:alert_danger] = "Passwords did not match, please try again."
+      redirect '/signup'
+    #Create new company and admin if above validations pass
     else
       company = Company.create(name: params[:company][:name])
       user = Admin.new({
@@ -21,6 +28,7 @@ class UsersController < ApplicationController
       if user.save
         redirect '/login'
       else
+        flash[:alert_danger] = "Sorry, there was an error saving your account.  Please try again."
         redirect '/failure'
       end
     end
@@ -32,7 +40,11 @@ class UsersController < ApplicationController
 
   post '/add_employee' do
     if User.all.collect{|user| user.username}.include?(params[:user][:username])
-      redirect '/failure'
+      flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
+      redirect '/add_employee'
+    elsif params[:user][:password] != params[:user][:password_confirm]
+      flash[:alert_danger] = "Passwords did not match, please try again."
+      redirect '/add_employee'
     else
       user = User.new({
         username: params[:user][:username],
@@ -92,14 +104,13 @@ class UsersController < ApplicationController
     elsif !admin && !user
       flash[:alert_warning] = "Unable to find your account.  Please make sure you typed your username correctly."
       redirect '/login'
-
     else
       redirect '/failure'
     end
   end
 
   get '/account' do
-    if admin?
+    if current_user.admin?
       @user = Admin.find(session[:user_id])
     else
       @user = User.find(session[:user_id])

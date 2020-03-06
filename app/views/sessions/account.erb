@@ -1,7 +1,7 @@
 <h1>Welcome <%=@user.username%>!</h1>
 
 <p>You are
-  <% if admin? %>
+  <% if current_user.admin? %>
     the admin
   <% else %>
     an employee
@@ -10,7 +10,7 @@ of <%=@user.company.name%>.</p>
 
 <a href='/products'>View Inventory</a>
 <br>
-<% if admin? %>
+<% if current_user.admin? %>
   <a href='/add_employee'>Add Employee</a>
   <br>
   <a href='/employees'>View Employees</a>
