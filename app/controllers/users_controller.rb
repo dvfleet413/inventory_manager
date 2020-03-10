@@ -5,32 +5,21 @@ class EmployeesController < ApplicationController
   end
 
   post '/signup' do
-    #Make sure username is unique
-    if Admin.all.collect{|admin| admin.username}.include?(params[:user][:username])
-      flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
-      redirect '/signup'
-    #Make sure company is unique
-    elsif Company.all.collect{|company| company.name}.include?(params[:company][:name])
-      flash[:alert_danger] = "The company #{params[:company][:name]} has already been registered."
-      redirect '/signup'
-    #Make sure password and password_confirm match
-    elsif params[:user][:password] != params[:user][:password_confirm]
-      flash[:alert_danger] = "Passwords did not match, please try again."
-      redirect '/signup'
+    validate_username
+    validate_company
+    validate_password
     #Create new company and admin if above validations pass
+    company = Company.create(name: params[:company][:name])
+    user = Admin.new({
+      username: params[:user][:username],
+      email: params[:user][:email],
+      password: params[:user][:password],
+      company_id: company.id})
+    if user.save
+      redirect '/login'
     else
-      company = Company.create(name: params[:company][:name])
-      user = Admin.new({
-        username: params[:user][:username],
-        email: params[:user][:email],
-        password: params[:user][:password],
-        company_id: company.id})
-      if user.save
-        redirect '/login'
-      else
-        flash[:alert_danger] = "Sorry, there was an error saving your account.  Please try again."
-        redirect '/failure'
-      end
+      flash[:alert_danger] = "Sorry, there was an error saving your account.  Please try again."
+      redirect '/failure'
     end
   end
 
@@ -39,23 +28,17 @@ class EmployeesController < ApplicationController
   end
 
   post '/add_employee' do
-    if Employee.all.collect{|employee| employee.username}.include?(params[:user][:username])
-      flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
-      redirect '/add_employee'
-    elsif params[:user][:password] != params[:user][:password_confirm]
-      flash[:alert_danger] = "Passwords did not match, please try again."
-      redirect '/add_employee'
+    validate_username
+    validate_password
+    user = Employee.new({
+      username: params[:user][:username],
+      email: params[:user][:email],
+      password: params[:user][:password],
+      company_id: current_user.company.id})
+    if user.save
+      redirect '/account'
     else
-      user = Employee.new({
-        username: params[:user][:username],
-        email: params[:user][:email],
-        password: params[:user][:password],
-        company_id: current_user.company.id})
-      if user.save
-        redirect '/account'
-      else
-        redirect '/failure'
-      end
+      redirect '/failure'
     end
   end
 
@@ -91,8 +74,8 @@ class EmployeesController < ApplicationController
     #Username matches a User account
   elsif employee
       if employee.authenticate(params[:password])
-        session[:user_id] = user.id
-        session[:company_id] = user.company_id
+        session[:user_id] = employee.id
+        session[:company_id] = employee.company_id
         flash[:alert_success] = "You have successfully logged in."
         redirect '/account'
       else
@@ -125,6 +108,37 @@ class EmployeesController < ApplicationController
     session.clear
     flash[:alert_success] = "You have successfully logged out."
     redirect '/'
+  end
+
+
+  helpers do
+    def validate_username
+      #Make sure username is unique
+      if Admin.all.collect{|admin| admin.username}.include?(params[:user][:username]) || Employee.all.collect{|employee| employee.username}.include?(params[:user][:username])
+        flash[:alert_danger] = "The username #{params[:user][:username]} has already been taken."
+        redirect '/signup'
+      end
+    end
+
+    def validate_company
+      #Make sure company is unique
+      if Company.all.collect{|company| company.name}.include?(params[:company][:name])
+        flash[:alert_danger] = "The company #{params[:company][:name]} has already been registered."
+        redirect '/signup'
+      end
+    end
+
+    def validate_password
+      #Make sure password contains capital letter, lowercase letter, number, and is at least 6 chars long
+      if !params[:user][:password].match(/(?=.*[a-z A-Z])(?=.*[1-9]).{6,}$/)
+        flash[:alert_danger] = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number."
+        redirect '/signup'
+      #Make sure password and password_confirm match
+      elsif params[:user][:password] != params[:user][:password_confirm]
+        flash[:alert_danger] = "Passwords did not match, please try again."
+        redirect '/signup'
+      end
+    end
   end
 
 end
