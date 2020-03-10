@@ -1,15 +1,15 @@
-Company.create(id: 1, name: "Super Cleanerz")
-Company.create(id: 2, name: "Keep it Kleen Karpet Kleeners")
-Company.create(id: 3, name: "ShingSparkleSprakle Floor Care")
+Company.create(name: "Super Cleanerz")
+Company.create(name: "Keep it Kleen Karpet Kleeners")
+Company.create(name: "ShingSparkleSprakle Floor Care")
 
 Admin.create(username: "iClean", email: "cleancleanclean@clean.com", password: "superclean", company_id: 1)
 Admin.create(username: "KingofKleen", email: "admin@carpetsrus.com", password: "password", company_id: 2)
 Admin.create(username: "SparkleMan", email: "floorguy@cleaner.com", password: "12345678", company_id: 3)
 
 
-Employee.create(id: 1, username: "AwesomeJanitor", email: "cleaningrocks@clean.com", password: "iluvtoclean", company_id: 1)
-Employee.create(id: 2, username: "carpetking", email: "carpetcleaner@carpetsrus.com", password: "freshFiberz", company_id: 2)
-Employee.create(id: 3, username: "ShinyFloorzz", email: "floormaster@cleaner.com", password: "sparkleSparkle", company_id: 3)
+Employee.create(username: "AwesomeJanitor", email: "cleaningrocks@clean.com", password: "iluvtoclean", company_id: 1)
+Employee.create(username: "carpetking", email: "carpetcleaner@carpetsrus.com", password: "freshFiberz", company_id: 2)
+Employee.create(username: "ShinyFloorzz", email: "floormaster@cleaner.com", password: "sparkleSparkle", company_id: 3)
 
 Product.create(name: "Orange Blossom", price: "10.99", quantity: "6", company_id: 1)
 Product.create(name: "Perox-a-Peel", price: "11.50", quantity: "3", company_id: 1)

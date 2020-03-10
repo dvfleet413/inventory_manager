@@ -1,4 +1,4 @@
-class EmployeesController < ApplicationController
+class UsersController < ApplicationController
 
   get '/signup' do
     erb :'registrations/signup'
@@ -61,33 +61,17 @@ class EmployeesController < ApplicationController
     admin = Admin.find_by(username: params[:username])
     employee = Employee.find_by(username: params[:username])
     #Username matches an Admin account
-    if admin
-      if admin.authenticate(params[:password])
-        session[:user_id] = admin.id
-        session[:company_id] = admin.company_id
-        flash[:alert_success] = "You have successfully logged in."
-        redirect '/account'
-      else
-        flash[:alert_danger] = "Incorrect password, please try again."
-        redirect '/login'
-      end
+    if Admin.find_by(username: params[:username])
+      user = Admin.find_by(username: params[:username])
+      login(user)
     #Username matches a User account
-  elsif employee
-      if employee.authenticate(params[:password])
-        session[:user_id] = employee.id
-        session[:company_id] = employee.company_id
-        flash[:alert_success] = "You have successfully logged in."
-        redirect '/account'
-      else
-        flash[:alert_danger] = "Incorrect password, please try again."
-        redirect '/login'
-      end
+    elsif Employee.find_by(username: params[:username])
+      user = Employee.find_by(username: params[:username])
+      login(user)
     #Username doesn't match any account
-  elsif !admin && !employee
+    else
       flash[:alert_warning] = "Unable to find your account.  Please make sure you typed your username correctly."
       redirect '/login'
-    else
-      redirect '/failure'
     end
   end
 
@@ -137,6 +121,18 @@ class EmployeesController < ApplicationController
       elsif params[:user][:password] != params[:user][:password_confirm]
         flash[:alert_danger] = "Passwords did not match, please try again."
         redirect '/signup'
+      end
+    end
+
+    def login(user)
+      if user.authenticate(params[:password])
+        session[:user_id] = user.id
+        session[:company_id] = user.company_id
+        flash[:alert_success] = "You have successfully logged in."
+        redirect '/account'
+      else
+        flash[:alert_danger] = "Incorrect password, please try again."
+        redirect '/login'
       end
     end
   end

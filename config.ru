@@ -1,8 +1,8 @@
 require "./config/environment"
-require_all './app'
+
 
 use Rack::MethodOverride
 
-use EmployeesController
+use UsersController
 use ProductsController
 run ApplicationController

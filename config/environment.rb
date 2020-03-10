@@ -6,3 +6,7 @@ Bundler.require(:default, ENV['SINATRA_ENV'])
 require 'sinatra/base'
 require 'sinatra/flash'
 require 'securerandom'
+require 'require_all'
+require 'pry'
+
+require_all './app'
