@@ -10,17 +10,17 @@ class ProductsController < ApplicationController
     @product = Product.create({name: params[:name],
                                price: params[:price].to_f,
                                quantity: params[:quantity],
-                               company_id: session[:company_id]})
+                               company_id: current_user.company.id})
     redirect "/products/#{@product.id}"
   end
 
   #Read
   get '/products' do
-    @company = Company.find(session[:company_id])
-    @products = Product.all.select{|product| product.company_id == session[:company_id]}
+    @company = current_user.company
+    @products = current_user.products
     sql = <<-SQL
       SELECT SUM(products.price * products.quantity) FROM products
-      WHERE products.company_id = #{session[:company_id]}
+      WHERE products.company_id = #{@company.id}
     SQL
     @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
     erb :'products/index'

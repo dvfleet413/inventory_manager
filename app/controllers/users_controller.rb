@@ -24,6 +24,10 @@ class UsersController < ApplicationController
   end
 
   get '/add_employee' do
+    if !current_user || !current_user.admin?
+      flash[:alert_warning] = "You must be logged in as an admin to create an employee account."
+      redirect '/login'
+    end
     erb :'registrations/add_employee'
   end
 
@@ -58,15 +62,15 @@ class UsersController < ApplicationController
   end
 
   post '/login' do
-    admin = Admin.find_by(username: params[:username])
-    employee = Employee.find_by(username: params[:username])
     #Username matches an Admin account
     if Admin.find_by(username: params[:username])
       user = Admin.find_by(username: params[:username])
+      session[:role] = "admin"
       login(user)
     #Username matches a User account
     elsif Employee.find_by(username: params[:username])
       user = Employee.find_by(username: params[:username])
+      session[:role] = "employee"
       login(user)
     #Username doesn't match any account
     else
@@ -127,7 +131,6 @@ class UsersController < ApplicationController
     def login(user)
       if user.authenticate(params[:password])
         session[:user_id] = user.id
-        session[:company_id] = user.company_id
         flash[:alert_success] = "You have successfully logged in."
         redirect '/account'
       else

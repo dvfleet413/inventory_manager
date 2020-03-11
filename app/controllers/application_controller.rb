@@ -19,10 +19,12 @@ class ApplicationController < Sinatra::Base
     end
 
     def current_user
-      if Admin.find(session[:user_id])
-        return Admin.find(session[:user_id])
-      else
+      if session[:role] == "admin"
+        Admin.find(session[:user_id])
+      elsif session[:role] == "employee"
         Employee.find(session[:user_id])
+      else
+        nil
       end
     end
   end
