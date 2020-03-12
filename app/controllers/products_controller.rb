@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
 
   get '/products/:id' do
     @product = Product.find(params[:id])
-    erb :'products/show'
+    @product.company == current_user.company ? (erb :'products/show') : (redirect '/products')
   end
 
   #Update

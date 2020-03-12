@@ -89,6 +89,12 @@ describe "ProductsController" do
         expect(page).to have_content("$10.99")
         expect(page).to have_content("6")
       end
+
+      it "redirects to '/products' if product doesnt belong to user" do
+        login
+        visit '/products/6'
+        expect(page).to have_current_path('/products')
+      end
     end
   end
 
