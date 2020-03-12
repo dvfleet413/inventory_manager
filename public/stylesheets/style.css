@@ -1,3 +1,7 @@
 .warning {
   color: rgb(139, 0, 0);
 }
+
+.password-requirements {
+  font-size: small;
+}
