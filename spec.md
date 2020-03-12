@@ -22,7 +22,8 @@ Specs:
   - Upon account creation, username is validated as unique (email can be reused)
 - [x] Ensure that the belongs_to resource has routes for Creating, Reading, Updating and Destroying  
   - Products can be Created (by Admin), Read (by Admins or Employees), Updated (all attributes by Admin, quantity by Employee), and Deleted (by Admin)
-- [ ] Ensure that users can't modify content created by other users
+- [x] Ensure that users can't modify content created by other users
+  - Authorization in ProductsController prevents users from reading or updating Product from another Company, redirects to '/products'
 - [x] Include user input validations  
   - For Product:  
     - Create and Update actions are validated by form input types ('text' for product[name], 'number' with step '0.01' for product[price] and 'number' for product[quantity]) in view
@@ -33,7 +34,8 @@ Specs:
 - [x] Your README.md includes a short description, install instructions, a contributors guide and a link to the license for your code
 
 Confirm
-- [ ] You have a large number of small Git commits
-- [ ] Your commit messages are meaningful
-- [ ] You made the changes in a commit that relate to the commit message
-- [ ] You don't include changes in a commit that aren't related to the commit message
+- [x] You have a large number of small Git commits
+- [x] Your commit messages are meaningful
+- [x] You made the changes in a commit that relate to the commit message
+- [x] You don't include changes in a commit that aren't related to the commit message
+  - Some commits may have extra changes (wasn't always super attentive to how much work I was doing between commits)

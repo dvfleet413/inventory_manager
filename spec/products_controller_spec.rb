@@ -119,6 +119,12 @@ describe "ProductsController" do
         expect(find_field('price').value).to eq("10.99")
         expect(find_field('quantity').value).to eq("6")
       end
+
+      it "redirects to '/products' if product doesnt belong to user" do
+        login
+        visit '/products/6/edit'
+        expect(page).to have_current_path('/products')
+      end
     end
 
     describe "PATCH '/products/:id'" do
