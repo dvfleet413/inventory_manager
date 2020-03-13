@@ -47,7 +47,8 @@ class UsersController < ApplicationController
   end
 
   get '/employees' do
-    @users = Employee.select{|user| user.company == current_user.company}
+#    @users = Employee.select{|user| user.company == current_user.company}
+    @users = current_user.employees
     erb :'users/employees'
   end
 
