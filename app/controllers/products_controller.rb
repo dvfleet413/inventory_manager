@@ -2,8 +2,13 @@ class ProductsController < ApplicationController
 
   #Create
   get '/products/new' do
-    @product = Product.new
-    erb :'products/new'
+    if logged_in?
+      @product = Product.new
+      erb :'products/new'
+    else
+      flash[:alert_warning] = "You must be logged in to view this page"
+      redirect '/login'
+    end
   end
 
   post '/products' do
@@ -16,25 +21,40 @@ class ProductsController < ApplicationController
 
   #Read
   get '/products' do
-    @company = current_user.company
-    @products = current_user.products
-    sql = <<-SQL
-      SELECT SUM(products.price * products.quantity) FROM products
-      WHERE products.company_id = #{@company.id}
-    SQL
-    @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
-    erb :'products/index'
+    if logged_in?
+      @company = current_user.company
+      @products = current_user.products
+      sql = <<-SQL
+        SELECT SUM(products.price * products.quantity) FROM products
+        WHERE products.company_id = #{@company.id}
+      SQL
+      @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
+      erb :'products/index'
+    else
+      flash[:alert_warning] = "You must be logged in to view this page"
+      redirect '/login'
+    end
   end
 
   get '/products/:id' do
-    @product = Product.find(params[:id])
-    @product.company == current_user.company ? (erb :'products/show') : (redirect '/products')
+    if logged_in?
+      @product = Product.find(params[:id])
+      @product.company == current_user.company ? (erb :'products/show') : (redirect '/products')
+    else
+      flash[:alert_warning] = "You must be logged in to view this page"
+      redirect '/login'
+    end
   end
 
   #Update
   get '/products/:id/edit' do
-    @product = Product.find(params[:id])
-    @product.company == current_user.company ? (erb :'products/edit') : (redirect '/products')
+    if logged_in?
+      @product = Product.find(params[:id])
+      @product.company == current_user.company ? (erb :'products/edit') : (redirect '/products')
+    else
+      flash[:alert_warning] = "You must be logged in to view this page"
+      redirect '/login'
+    end
   end
 
   patch '/products/:id' do
