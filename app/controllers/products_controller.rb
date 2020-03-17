@@ -2,75 +2,68 @@ class ProductsController < ApplicationController
 
   #Create
   get '/products/new' do
-    if logged_in?
-      @product = Product.new
-      erb :'products/new'
-    else
-      flash[:alert_warning] = "You must be logged in to view this page"
-      redirect '/login'
-    end
+    redirect_if_not_logged_in
+    @product = Product.new
+    erb :'products/new'
   end
 
   post '/products' do
-    @product = Product.create({name: params[:name],
-                               price: params[:price].to_f,
-                               quantity: params[:quantity],
-                               company_id: current_user.company.id})
+    @product = current_user.company.products.create(params)
     redirect "/products/#{@product.id}"
   end
 
   #Read
   get '/products' do
-    if logged_in?
-      @company = current_user.company
-      @products = current_user.products
-      sql = <<-SQL
-        SELECT SUM(products.price * products.quantity) FROM products
-        WHERE products.company_id = #{@company.id}
-      SQL
-      @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
-      erb :'products/index'
-    else
-      flash[:alert_warning] = "You must be logged in to view this page"
-      redirect '/login'
-    end
+    redirect_if_not_logged_in
+    @company = current_user.company
+    @products = current_user.products
+    sql = <<-SQL
+      SELECT SUM(products.price * products.quantity) FROM products
+      WHERE products.company_id = #{@company.id}
+    SQL
+    @total = ActiveRecord::Base.connection.execute(sql)[0]['sum']
+    erb :'products/index'
   end
 
   get '/products/:id' do
-    if logged_in?
-      @product = Product.find(params[:id])
-      @product.company == current_user.company ? (erb :'products/show') : (redirect '/products')
-    else
-      flash[:alert_warning] = "You must be logged in to view this page"
-      redirect '/login'
-    end
+    redirect_if_not_logged_in
+    set_product
+    @product.company == current_user.company ? (erb :'products/show') : (redirect '/products')
   end
 
   #Update
   get '/products/:id/edit' do
-    if logged_in?
-      @product = Product.find(params[:id])
-      @product.company == current_user.company ? (erb :'products/edit') : (redirect '/products')
-    else
-      flash[:alert_warning] = "You must be logged in to view this page"
-      redirect '/login'
-    end
+    redirect_if_not_logged_in
+    set_product
+    @product.company == current_user.company ? (erb :'products/edit') : (redirect '/products')
   end
 
   patch '/products/:id' do
-    @product = Product.find(params[:id])
-    @product.name = params[:name]
-    @product.price= params[:price]
-    @product.quantity = params[:quantity]
-    @product.save
+    set_product
+    if @product && is_authorized
+      @product.update({
+        name: params[:name],
+        price: params[:price],
+        quantity: params[:quantity]})
+    end
     redirect "/products/#{@product.id}"
   end
 
   #Delete
   delete '/products/:id' do
-    @product = Product.find(params[:id])
-    @product.destroy
+    set_product
+    @product.destroy if is_authorized
     redirect '/products'
   end
+
+  private
+    def set_product
+      @product = Product.find_by_id(params[:id])
+    end
+
+    def is_authorized
+      @product.company == current_user.company
+    end
+
 
 end

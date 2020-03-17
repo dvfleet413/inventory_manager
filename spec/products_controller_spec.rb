@@ -3,9 +3,14 @@ require 'spec_helper'
 describe "ProductsController" do
   describe "Create" do
     describe "GET '/products/new'" do
+      before do
+        @company = Company.create(name: "Super Cleanerzz")
+        @admin = Admin.create(username: "SuperCleaner", email: "cleanguy@cleaning.com", password: "CleanGuy1", company_id: 1)
+      end
       it "displays New Product form" do
-        get '/products/new'
-        expect(last_response.body).to include("Create New Product")
+        login
+        visit '/products/new'
+        expect(page).to have_content("Create New Product")
       end
     end
 
@@ -170,6 +175,7 @@ describe "ProductsController" do
       end
 
       it "deletes product record" do
+        login
         delete '/products/1'
         expect(Product.find_by(id: 1)).to eq(nil)
       end
